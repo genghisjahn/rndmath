@@ -18,6 +18,7 @@
     }
     .setup-container {
         margin-bottom: 20px;
+        font-size: 2vw;
         text-align: center;
         }
 
@@ -121,16 +122,50 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    .ticker {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.ticker span {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center;
+}
+
+.buttons button {
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #007bff;
+  padding: 5px;
+}
+
+.buttons button:hover {
+  color: #0056b3;
+}
+
   </style>
 </head>
 <body>
       <div class="setup-container">
-        <label for="problemTicker">Choose number of problems:</label>
-        <div class="ticker-container">
-          <button id="decrement" onclick="changeProblemCount(-5)">-</button>
+        <label for="problemTicker"># of problems:</label>
+        <div class="ticker">
           <span id="problemCount">5</span>
-          <button id="increment" onclick="changeProblemCount(5)">+</button>
+          <div class="buttons">
+            <button id="increment" onclick="changeProblemCount(5)">&#9650;</button>
+            <button id="decrement" onclick="changeProblemCount(-5)">&#9660;</button>
+          </div>
         </div>
+        
         <button onclick="startProblems()">Start</button>
       </div>
   
