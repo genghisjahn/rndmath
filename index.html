@@ -274,6 +274,7 @@ function startProblems() {
 
   updateProgressBar();
   generateProblem();
+  document.getElementById('answer').focus();
 }
 
 
@@ -285,6 +286,8 @@ function nextProblem() {
   if (!answer || !/^\d+$/.test(answer)) {
     answerInput.classList.add('invalid');
     setTimeout(() => answerInput.classList.remove('invalid'), 300); // Remove the flash after 300ms
+    // Focus on the answer input box
+    answerInput.focus();
     return; // Do not proceed
   }
 
@@ -294,6 +297,8 @@ function nextProblem() {
     updateProgressBar();
     answerInput.value = ''; // Clear the input for the next problem
     generateProblem();
+    // Focus on the answer input box
+    answerInput.focus();
   } else {
     updateProgressBar();
     setTimeout(() => {
