@@ -259,6 +259,39 @@
   background-color: #0056b3;
 }
 
+.answer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the input and microphone */
+}
+
+.mic-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.mic-btn:hover {
+  background-color: #0056b3;
+}
+
+.mic-btn:active {
+  background-color: #003f8f;
+}
+
+
 
   </style>
   
@@ -296,7 +329,12 @@
           </div>
         </div>
         <div class="line"></div>
-        <input id="answer" class="answer-input" type="text" placeholder="Your Answer">
+        <div class="answer-container">
+          <input id="answer" class="answer-input" type="text" placeholder="Your Answer">
+          <button id="microphone" class="mic-btn" onclick="startSpeechRecognition()">
+            🎤
+          </button>
+        </div>
         <div class="problem-actions">
           <button onclick="nextProblem()">Next</button>
           <button onclick="confirmQuit()">Quit</button>
@@ -459,6 +497,40 @@ function quit() {
   document.querySelector('.setup-container').style.display = 'flex';
   currentProblem = 0;
   updateProgressBar(); // Reset progress bar
+}
+
+
+function startSpeechRecognition() {
+  // Check if the browser supports the Web Speech API
+  if (!('webkitSpeechRecognition' in window)) {
+    alert('Speech recognition is not supported in this browser.');
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition(); // Create a new instance
+  recognition.lang = 'en-US'; // Set the language
+  recognition.interimResults = false; // Do not show interim results
+  recognition.maxAlternatives = 1; // Only one result
+
+  // Start recognition when the user clicks the button
+  recognition.start();
+
+  // Update the answer box with the recognized text
+  recognition.onresult = function (event) {
+    const transcript = event.results[0][0].transcript; // Get the transcribed text
+    document.getElementById('answer').value = transcript.trim(); // Set it in the answer box
+  };
+
+  // Handle errors
+  recognition.onerror = function (event) {
+    console.error('Speech recognition error:', event.error);
+    alert('An error occurred during speech recognition. Please try again.');
+  };
+
+  // Notify the user when recognition ends
+  recognition.onend = function () {
+    console.log('Speech recognition ended.');
+  };
 }
 
 
