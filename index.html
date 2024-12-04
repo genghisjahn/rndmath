@@ -19,12 +19,18 @@
   
     .setup-container {
       display: flex;
-      align-items: center; /* Vertically align all elements in the row */
+      align-items: center;
       justify-content: center;
       gap: 15px;
       margin-bottom: 20px;
       font-size: 1.2rem;
-    }
+      padding: 15px; /* Add some padding inside the border */
+      border: 2px solid #007bff; /* Simple blue border */
+      border-radius: 10px; /* Rounded corners for a modern look */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      background-color: #f9f9f9; /* Light background for contrast */
+      }
+
 
     .ticker {
       display: flex;
@@ -150,9 +156,9 @@
 </head>
 <body>
       <div class="setup-container">
-        <label for="problemTicker"># of problems:</label>
+        <label for="problemTicker" style="font-size: 2vw;"># of problems:</label>
         <div class="ticker">
-          <span id="problemCount">5</span>
+          <span id="problemCount" style="font-size: 2vw;">5</span>
           <div class="buttons">
             <button id="increment" onclick="changeProblemCount(5)">&#9650;</button>
             <button id="decrement" onclick="changeProblemCount(-5)">&#9660;</button>
