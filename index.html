@@ -16,6 +16,28 @@
       background-color: #f4f4f9;
       color: #333;
     }
+    .setup-container {
+        margin-bottom: 20px;
+        text-align: center;
+        }
+
+        .progress-bar-container {
+        width: 100%;
+        background-color: #e0e0e0;
+        height: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: none; /* Initially hidden */
+        }
+
+        .progress-bar {
+        height: 100%;
+        width: 0%; /* Progress starts at 0% */
+        background-color: #007bff;
+        border-radius: 10px;
+        transition: width 0.3s;
+        }
+
     .problem-box {
       background: #fff;
       padding: 5vw;
@@ -73,18 +95,40 @@
   </style>
 </head>
 <body>
-  <div class="problem-box">
-    <div class="problem-container">
-        <div id="num1" class="number"></div>
-        <div class="operator-row">
-          <div id="operator" class="operator"></div>
-          <div id="num2" class="number"></div>
-        </div>
+    <div class="setup-container">
+        <label for="numProblems">Choose number of problems:</label>
+        <select id="numProblems">
+          <!-- Dropdown values: 5 to 50 -->
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+          <option value="40">40</option>
+          <option value="45">45</option>
+          <option value="50">50</option>
+        </select>
+        <button onclick="startProblems()">Start</button>
       </div>
       
-    <div class="line"></div>
-    <button onclick="generateProblem()">Next</button>
-  </div>
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      
+      <div class="problem-box" style="display: none;">
+        <div class="problem-container">
+          <div id="num1" class="number"></div>
+          <div class="operator-row">
+            <div id="operator" class="operator"></div>
+            <div id="num2" class="number"></div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <button onclick="nextProblem()">Next</button>
+      </div>
+      
 
   <script>
     function generateProblem() {
@@ -122,6 +166,39 @@
       document.getElementById('operator').textContent = operator;
       document.getElementById('num2').textContent = num2;
     }
+    let totalProblems = 0;
+    let currentProblem = 0;
+
+    function startProblems() {
+    totalProblems = parseInt(document.getElementById('numProblems').value, 10);
+    currentProblem = 0;
+
+    // Show the progress bar and problem box, hide the setup
+    document.querySelector('.setup-container').style.display = 'none';
+    document.querySelector('.progress-bar-container').style.display = 'block';
+    document.querySelector('.problem-box').style.display = 'flex';
+
+    updateProgressBar();
+    generateProblem();
+    }
+
+    function nextProblem() {
+    currentProblem++;
+
+    if (currentProblem < totalProblems) {
+        updateProgressBar();
+        generateProblem();
+    } else {
+        alert("You've completed all problems!");
+        location.reload(); // Reload page to restart
+    }
+    }
+
+    function updateProgressBar() {
+    const progress = (currentProblem / totalProblems) * 100;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
   </script>
 </body>
 </html>
