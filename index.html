@@ -151,6 +151,34 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    .answer-input {
+      font-size: 5vw;
+      text-align: center;
+      width: 80%; /* Matches the size of the problem box */
+      margin-top: 20px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .answer-input:focus {
+      border-color: #007bff;
+    }
+
+    .answer-input.invalid {
+      border-color: red;
+      animation: flash 0.3s;
+    }
+
+    @keyframes flash {
+      0%, 100% { background-color: #f8d7da; }
+      50% { background-color: #fff; }
+    }
+
+    
   </style>
   
 </head>
@@ -181,8 +209,10 @@
           </div>
         </div>
         <div class="line"></div>
+        <input id="answer" class="answer-input" type="text" placeholder="Your Answer">
         <button onclick="nextProblem()">Next</button>
       </div>
+      
       
 
   <script>
@@ -244,23 +274,39 @@ function startProblems() {
 
   updateProgressBar();
   generateProblem();
+  document.getElementById('answer').focus();
 }
 
 
-    function nextProblem() {
-    currentProblem++;
+function nextProblem() {
+  const answerInput = document.getElementById('answer');
+  const answer = answerInput.value.trim();
 
-    if (currentProblem < totalProblems) {
-        updateProgressBar();
-        generateProblem();
-    } else {
-        updateProgressBar();
-        setTimeout(() => {
-          alert("You've completed all problems!");
-          location.reload(); // Reload page to restart
-        }, 500); // Delay the alert for 500ms to allow the animation to complete
-    }
-    }
+  // Check if the answer is a whole number
+  if (!answer || !/^\d+$/.test(answer)) {
+    answerInput.classList.add('invalid');
+    setTimeout(() => answerInput.classList.remove('invalid'), 300); // Remove the flash after 300ms
+    // Focus on the answer input box
+    answerInput.focus();
+    return; // Do not proceed
+  }
+
+  currentProblem++;
+
+  if (currentProblem < totalProblems) {
+    updateProgressBar();
+    answerInput.value = ''; // Clear the input for the next problem
+    generateProblem();
+    // Focus on the answer input box
+    answerInput.focus();
+  } else {
+    updateProgressBar();
+    setTimeout(() => {
+      alert("You've completed all problems!");
+      location.reload(); // Reload page to restart
+    }, 500); // Delay the alert for 500ms to allow the animation to complete
+  }
+}
 
     function updateProgressBar() {
     const progress = (currentProblem / totalProblems) * 100;
