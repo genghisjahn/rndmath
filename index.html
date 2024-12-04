@@ -530,93 +530,76 @@ function quit() {
 let recognition; // Declare recognition globally
 let isListening = false; // Track whether the microphone is actively listening
 
-function toggleSpeechRecognition() {
-  const micButton = document.getElementById('microphone');
-
-  if (isListening) {
-    // Stop recognition
-    stopSpeechRecognition();
-    micButton.textContent = '🎤'; // Reset button icon
-    isListening = false;
-  } else {
-    // Start recognition
-    startSpeechRecognition();
-    micButton.textContent = '🔴'; // Change button icon to indicate listening
-    isListening = true;
-  }
-}
-
-function startSpeechRecognition() {
-  // Check if the browser supports the Web Speech API
+// Initialize Speech Recognition once
+function initSpeechRecognition() {
   if (!('webkitSpeechRecognition' in window)) {
     alert('Speech recognition is not supported in this browser.');
     return;
   }
 
-  // Initialize Speech Recognition
   recognition = new webkitSpeechRecognition();
   recognition.lang = 'en-US'; // Set language
   recognition.interimResults = true; // Show interim results while speaking
   recognition.maxAlternatives = 1; // Only one result
 
-  // Update the answer box as the user speaks
   recognition.onresult = function (event) {
     const transcript = event.results[0][0].transcript; // Get the spoken text
-    var setAnswer = transcript.trim().toLowerCase();
-    if (setAnswer == "zero"){
-      setAnswer = '0';
-    }
-    if (setAnswer=="one"){
-      setAnswer = '1';
-    }
-    if (setAnswer=="two"){
-      setAnswer = '2';
-    }
-    if (setAnswer=="three"){
-      setAnswer = '3';
-    }
-    if (setAnswer=="four"){
-      setAnswer = '4';
-    }
-    if (setAnswer=="five"){
-      setAnswer = '5';
-    }
-    if (setAnswer=="six"){
-      setAnswer = '6';
-    }
-    if (setAnswer=="seven"){
-      setAnswer = '7';
-    }
-    if (setAnswer=="eight"){
-      setAnswer = '8';
-    }
-    if (setAnswer=="nine"){
-      setAnswer = '9';
-    }
+    let setAnswer = transcript.trim().toLowerCase();
+
+    // Convert words to digits
+    const wordToDigit = {
+      zero: '0',
+      one: '1',
+      two: '2',
+      three: '3',
+      four: '4',
+      five: '5',
+      six: '6',
+      seven: '7',
+      eight: '8',
+      nine: '9',
+    };
+    setAnswer = wordToDigit[setAnswer] || setAnswer;
+
     document.getElementById('answer').value = setAnswer; // Update answer input
   };
 
-  // Handle errors
   recognition.onerror = function (event) {
     console.error('Speech recognition error:', event.error);
   };
 
-  // Restart recognition when it ends
   recognition.onend = function () {
     if (isListening) {
       recognition.start(); // Restart if the user is still in listening mode
     }
   };
-
-  recognition.start(); // Start recognition
 }
 
-function stopSpeechRecognition() {
-  if (recognition) {
+// Toggle speech recognition
+function toggleSpeechRecognition() {
+  const micButton = document.getElementById('microphone');
+
+  if (isListening) {
     recognition.stop(); // Stop recognition
-    recognition = null; // Reset recognition
+    micButton.textContent = '🎤'; // Reset button icon
+    isListening = false;
+  } else {
+    recognition.start(); // Start recognition
+    micButton.textContent = '🔴'; // Change button icon to indicate listening
+    isListening = true;
   }
 }
+
+// Stop speech recognition when quitting
+function stopSpeechRecognition() {
+  if (recognition && isListening) {
+    recognition.stop(); // Stop recognition
+    isListening = false;
+  }
+}
+
+// Initialize recognition on page load
+window.onload = initSpeechRecognition;
 
 
 
