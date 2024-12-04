@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Math Problems</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    .problem-box {
+      background: #fff;
+      padding: 5vw;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 80vw;
+      max-height: 80vh;
+      width: 50vw;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .problem-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Align rows to the right */
+    }
+    .number {
+      font-size: 5vw;
+      text-align: right;
+    }
+    .operator-row {
+        display: flex;
+        justify-content: flex-end; /* Align operator and num2 to the right */
+        align-items: center; /* Vertically center operator with num2 */
+        width: 100%; /* Ensure proper alignment within container */
+        }
+
+        .operator {
+        font-size: 5vw;
+        margin-right: 0.5vw; /* Space between operator and num2 */
+        }
+
+    .line {
+      border-top: 2px solid #333;
+      margin-top: 15px;
+      width: 100%;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 1vw 2vw;
+      border-radius: 5px;
+      font-size: 2vw;
+      cursor: pointer;
+      margin-top: 2vh;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="problem-box">
+    <div class="problem-container">
+        <div id="num1" class="number"></div>
+        <div class="operator-row">
+          <div id="operator" class="operator"></div>
+          <div id="num2" class="number"></div>
+        </div>
+      </div>
+      
+    <div class="line"></div>
+    <button onclick="generateProblem()">Next</button>
+  </div>
+
+  <script>
+    function generateProblem() {
+      const operations = ['+', '-', '*', '/'];
+      let num1, num2, operator;
+
+      operator = operations[Math.floor(Math.random() * operations.length)];
+
+      if (operator === '*') {
+        // Multiplication with answer <= 144
+        num1 = Math.floor(Math.random() * 12) + 1; // 1 to 12
+        num2 = Math.floor(Math.random() * 12) + 1; // 1 to 12
+        operator = '×';
+      } else if (operator === '/') {
+        // Division with answer <= 12
+        num2 = Math.floor(Math.random() * 12) + 1; // 1 to 12
+        const quotient = Math.floor(Math.random() * 12) + 1; // 1 to 12
+        num1 = num2 * quotient; // Ensures integer result
+        operator = '÷';
+      } else if (operator === '-') {
+        // Subtraction with non-negative result
+        num1 = Math.floor(Math.random() * 100) + 1; // 1 to 100
+        num2 = Math.floor(Math.random() * 100) + 1; // 1 to 100
+        if (num2 > num1) {
+          [num1, num2] = [num2, num1]; // Swap to ensure num1 >= num2
+        }
+      } else {
+        // Addition
+        num1 = Math.floor(Math.random() * 100) + 1; // 1 to 100
+        num2 = Math.floor(Math.random() * 100) + 1; // 1 to 100
+      }
+
+      // Update the HTML
+      document.getElementById('num1').textContent = num1;
+      document.getElementById('operator').textContent = operator;
+      document.getElementById('num2').textContent = num2;
+    }
+  </script>
+</body>
+</html>
