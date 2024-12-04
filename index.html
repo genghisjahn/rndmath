@@ -331,7 +331,9 @@
         <div class="line"></div>
         <div class="answer-container">
           <input id="answer" class="answer-input" type="text" placeholder="Your Answer">
-          <button id="microphone" class="mic-btn" onclick="startSpeechRecognition()">
+          <button id="microphone" class="mic-btn" 
+                  onmousedown="startSpeechRecognition()" 
+                  onmouseup="stopSpeechRecognition()">
             🎤
           </button>
         </div>
@@ -500,6 +502,8 @@ function quit() {
 }
 
 
+let recognition; // Declare recognition globally to manage start and stop
+
 function startSpeechRecognition() {
   // Check if the browser supports the Web Speech API
   if (!('webkitSpeechRecognition' in window)) {
@@ -507,31 +511,39 @@ function startSpeechRecognition() {
     return;
   }
 
-  const recognition = new webkitSpeechRecognition(); // Create a new instance
-  recognition.lang = 'en-US'; // Set the language
-  recognition.interimResults = false; // Do not show interim results
+  // Initialize Speech Recognition
+  recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-US'; // Set language
+  recognition.interimResults = true; // Show interim results while speaking
   recognition.maxAlternatives = 1; // Only one result
 
-  // Start recognition when the user clicks the button
-  recognition.start();
-
-  // Update the answer box with the recognized text
+  // Update the answer box as the user speaks
   recognition.onresult = function (event) {
-    const transcript = event.results[0][0].transcript; // Get the transcribed text
-    document.getElementById('answer').value = transcript.trim(); // Set it in the answer box
+    const transcript = event.results[0][0].transcript; // Get the spoken text
+    document.getElementById('answer').value = transcript.trim(); // Update answer input
   };
 
   // Handle errors
   recognition.onerror = function (event) {
     console.error('Speech recognition error:', event.error);
-    alert('An error occurred during speech recognition. Please try again.');
   };
 
-  // Notify the user when recognition ends
+  // Notify when recognition ends (e.g., if released prematurely)
   recognition.onend = function () {
     console.log('Speech recognition ended.');
   };
+
+  // Start recognition when the button is pressed
+  recognition.start();
 }
+
+function stopSpeechRecognition() {
+  if (recognition) {
+    recognition.stop(); // Stop recognition when the button is released
+    recognition = null; // Reset recognition
+  }
+}
+
 
 
   </script>
