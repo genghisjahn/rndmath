@@ -230,6 +230,13 @@
   z-index: 10;
 }
 
+#results-container-fix {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0; /* Remove any spacing between elements */
+}
+
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -238,7 +245,13 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 80%;
-  margin-bottom: 10px; /* Space between content and button */
+}
+
+.restart-container {
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  width: 100%; /* Ensure it aligns with the modal content */
+  text-align: center; /* Center the button */
 }
 
 .restart-button {
@@ -249,20 +262,12 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  width: calc(100% - 40px); /* Full width with padding */
-  max-width: 300px; /* Limit max width */
-  margin: 0 auto; /* Center button */
 }
 
 .restart-button:hover {
   background-color: #0056b3;
 }
 
-
-.modal-content p {
-  font-size: 1.2rem;
-  margin: 10px 0;
-}
 
 .modal-content button {
   background-color: #007bff;
@@ -378,13 +383,19 @@
         </div>
       </div>
 
-  <!-- Results Modal -->
-  <div id="results-modal" class="modal" style="display: none;">
+<!-- Results Modal -->
+<div id="results-modal" class="modal" style="display: none;">
+  <div id="results-container-fix">
     <div class="modal-content" id="results-content">
       <!-- Results content will be dynamically inserted here -->
     </div>
-    <button onclick="restartQuiz()" class="restart-button">Restart</button>
+    <div class="restart-container">
+      <button onclick="restartQuiz()" class="restart-button">Restart</button>
+    </div>
   </div>
+</div>
+
+  
   
       
       
@@ -715,6 +726,7 @@ function restartQuiz() {
   wrongAnswers = []; // Reset wrong answers
   document.getElementById("results-modal").style.display = "none";
   startProblems();
+  location.reload(); // Reload the page
 }
 
 
