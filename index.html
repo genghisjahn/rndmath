@@ -529,6 +529,7 @@ function quit() {
 
 let recognition; // Declare recognition globally
 let isListening = false; // Track whether the microphone is actively listening
+let isPaused = false; // Track whether recognition is "paused"
 
 // Initialize Speech Recognition once
 function initSpeechRecognition() {
@@ -543,6 +544,8 @@ function initSpeechRecognition() {
   recognition.maxAlternatives = 1; // Only one result
 
   recognition.onresult = function (event) {
+    if (isPaused) return; // Ignore results when paused
+
     const transcript = event.results[0][0].transcript; // Get the spoken text
     let setAnswer = transcript.trim().toLowerCase();
 
@@ -580,10 +583,13 @@ function toggleSpeechRecognition() {
   const micButton = document.getElementById('microphone');
 
   if (isListening) {
-    recognition.stop(); // Stop recognition
+    // Pause recognition
+    isPaused = true;
     micButton.textContent = '🎤'; // Reset button icon
     isListening = false;
   } else {
+    // Resume recognition
+    isPaused = false;
     recognition.start(); // Start recognition
     micButton.textContent = '🔴'; // Change button icon to indicate listening
     isListening = true;
@@ -592,14 +598,16 @@ function toggleSpeechRecognition() {
 
 // Stop speech recognition when quitting
 function stopSpeechRecognition() {
-  if (recognition && isListening) {
+  if (recognition) {
     recognition.stop(); // Stop recognition
     isListening = false;
+    isPaused = false;
   }
 }
 
 // Initialize recognition on page load
 window.onload = initSpeechRecognition;
+
 
 
 
