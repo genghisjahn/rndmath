@@ -38,6 +38,35 @@
         transition: width 0.3s;
         }
 
+        .ticker-container {
+  display: inline-flex;
+  align-items: center;
+  margin: 10px;
+  font-size: 1.5rem;
+}
+
+.ticker-container button {
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ticker-container button:hover {
+  background-color: #0056b3;
+}
+
+.ticker-container #problemCount {
+  margin: 0 15px;
+  min-width: 40px;
+  text-align: center;
+}
+
+
     .problem-box {
       background: #fff;
       padding: 5vw;
@@ -95,23 +124,16 @@
   </style>
 </head>
 <body>
-    <div class="setup-container">
-        <label for="numProblems">Choose number of problems:</label>
-        <select id="numProblems">
-          <!-- Dropdown values: 5 to 50 -->
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="35">35</option>
-          <option value="40">40</option>
-          <option value="45">45</option>
-          <option value="50">50</option>
-        </select>
+      <div class="setup-container">
+        <label for="problemTicker">Choose number of problems:</label>
+        <div class="ticker-container">
+          <button id="decrement" onclick="changeProblemCount(-5)">-</button>
+          <span id="problemCount">5</span>
+          <button id="increment" onclick="changeProblemCount(5)">+</button>
+        </div>
         <button onclick="startProblems()">Start</button>
       </div>
+  
       
       <div class="progress-bar-container">
         <div id="progress-bar" class="progress-bar"></div>
@@ -166,21 +188,31 @@
       document.getElementById('operator').textContent = operator;
       document.getElementById('num2').textContent = num2;
     }
-    let totalProblems = 0;
-    let currentProblem = 0;
+    let totalProblems = 5; // Default to 5 problems
 
-    function startProblems() {
-    totalProblems = parseInt(document.getElementById('numProblems').value, 10);
-    currentProblem = 0;
+function changeProblemCount(delta) {
+  const minProblems = 5;
+  const maxProblems = 50;
 
-    // Show the progress bar and problem box, hide the setup
-    document.querySelector('.setup-container').style.display = 'none';
-    document.querySelector('.progress-bar-container').style.display = 'block';
-    document.querySelector('.problem-box').style.display = 'flex';
+  // Adjust problem count by delta, keeping it within bounds
+  totalProblems = Math.min(maxProblems, Math.max(minProblems, totalProblems + delta));
 
-    updateProgressBar();
-    generateProblem();
-    }
+  // Update the display
+  document.getElementById('problemCount').textContent = totalProblems;
+}
+
+function startProblems() {
+  currentProblem = 0;
+
+  // Show the progress bar and problem box, hide the setup
+  document.querySelector('.setup-container').style.display = 'none';
+  document.querySelector('.progress-bar-container').style.display = 'block';
+  document.querySelector('.problem-box').style.display = 'flex';
+
+  updateProgressBar();
+  generateProblem();
+}
+
 
     function nextProblem() {
     currentProblem++;
