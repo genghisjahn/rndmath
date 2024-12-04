@@ -223,11 +223,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; /* Ensure it appears above other elements */
+  z-index: 10;
 }
 
 .modal-content {
@@ -236,16 +236,16 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 80%;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
+.modal-content p {
+  font-size: 1.2rem;
+  margin: 10px 0;
 }
 
-.modal-actions button {
+.modal-content button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -253,9 +253,10 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  margin-top: 15px;
 }
 
-.modal-actions button:hover {
+.modal-content button:hover {
   background-color: #0056b3;
 }
 
@@ -357,6 +358,17 @@
           </div>
         </div>
       </div>
+
+            <!-- Result Modal -->
+      <div id="result-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <p>Total Problems: <span id="total-problems"></span></p>
+          <p>Correct Answers: <span id="correct-answers"></span></p>
+          <p>Grade: <span id="grade" style="padding: 5px; border-radius: 5px;"></span></p>
+          <button onclick="closeResultModal()">Close</button>
+        </div>
+      </div>
+
       
       
 
@@ -492,20 +504,48 @@ function nextProblem() {
     generateProblem();
     answerInput.focus();
   } else {
-    showResults();
+    // Complete the progress bar before showing results
+    updateProgressBar();
+    setTimeout(() => {
+      showResults(); // Show results after a delay
+    }, 500); // Delay to allow the progress bar to visually complete
   }
 }
 
 function showResults() {
   const percentage = ((score / totalProblems) * 100).toFixed(2);
-  const resultMessage = `You got ${score} out of ${totalProblems} correct (${percentage}%)!`;
 
-  // Show results in an alert (can be updated to display in HTML)
-  alert(resultMessage);
+  // Populate modal content
+  document.getElementById('total-problems').textContent = totalProblems;
+  document.getElementById('correct-answers').textContent = score;
+
+  const gradeElement = document.getElementById('grade');
+  gradeElement.textContent = `${percentage}%`;
+
+  // Apply background color based on grade
+  if (percentage >= 90) {
+    gradeElement.style.backgroundColor = 'green';
+    gradeElement.style.color = 'white';
+  } else if (percentage >= 70) {
+    gradeElement.style.backgroundColor = 'yellow';
+    gradeElement.style.color = 'black';
+  } else {
+    gradeElement.style.backgroundColor = 'red';
+    gradeElement.style.color = 'white';
+  }
+
+  // Show the result modal
+  document.getElementById('result-modal').style.display = 'flex';
+}
+
+function closeResultModal() {
+  // Hide the result modal
+  document.getElementById('result-modal').style.display = 'none';
 
   // Reset quiz
   resetQuiz();
 }
+
 
 function resetQuiz() {
   score = 0;
