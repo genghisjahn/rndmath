@@ -447,6 +447,7 @@ function changeProblemCount(delta) {
 
 function startProblems() {
   // Validate that at least one operation is selected
+  document.getElementById('answer').value = '';
   if (selectedOperations.length === 0) {
     const operationDiv = document.getElementById('operation-selection');
     operationDiv.classList.add('invalid'); // Flash the operation div red
