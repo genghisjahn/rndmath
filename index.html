@@ -466,9 +466,27 @@ function nextProblem() {
 
   if (currentProblem < totalProblems) {
     updateProgressBar();
-    answerInput.value = '';
+
+    // Stop recognition temporarily to avoid residual input
+    if (recognition && isListening) {
+      recognition.onresult = null; // Temporarily disable result handler
+      recognition.stop(); // Stop recognition to clear any queued results
+    }
+
+    // Transition to the next problem
+    answerInput.value = ''; // Clear the input field
     generateProblem();
-    answerInput.focus();
+
+    // Restore recognition after transition
+    if (recognition && isListening) {
+      recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        answerInput.value = transcript.trim(); // Update answer input
+      };
+      recognition.start(); // Restart recognition for the new problem
+    }
+
+    answerInput.focus(); // Focus on the input field
   } else {
     updateProgressBar();
     setTimeout(() => {
@@ -478,6 +496,8 @@ function nextProblem() {
     }, 500);
   }
 }
+
+
 
     function updateProgressBar() {
       const progress = (currentProblem / totalProblems) * 100;
@@ -542,7 +562,38 @@ function startSpeechRecognition() {
   // Update the answer box as the user speaks
   recognition.onresult = function (event) {
     const transcript = event.results[0][0].transcript; // Get the spoken text
-    document.getElementById('answer').value = transcript.trim(); // Update answer input
+    var setAnswer = transcript.trim().toLowerCase();
+    if (setAnswer == "zero"){
+      setAnswer = '0';
+    }
+    if (setAnswer=="one"){
+      setAnswer = '1';
+    }
+    if (setAnswer=="two"){
+      setAnswer = '2';
+    }
+    if (setAnswer=="three"){
+      setAnswer = '3';
+    }
+    if (setAnswer=="four"){
+      setAnswer = '4';
+    }
+    if (setAnswer=="five"){
+      setAnswer = '5';
+    }
+    if (setAnswer=="six"){
+      setAnswer = '6';
+    }
+    if (setAnswer=="seven"){
+      setAnswer = '7';
+    }
+    if (setAnswer=="eight"){
+      setAnswer = '8';
+    }
+    if (setAnswer=="nine"){
+      setAnswer = '9';
+    }
+    document.getElementById('answer').value = setAnswer; // Update answer input
   };
 
   // Handle errors
