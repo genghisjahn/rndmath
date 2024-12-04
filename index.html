@@ -16,6 +16,82 @@
       background-color: #f4f4f9;
       color: #333;
     }
+  
+    .setup-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      padding: 15px; /* Add some padding inside the border */
+      border: 2px solid #007bff; /* Simple blue border */
+      border-radius: 10px; /* Rounded corners for a modern look */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      background-color: #f9f9f9; /* Light background for contrast */
+      }
+
+
+    .ticker {
+      display: flex;
+      align-items: center; /* Vertically align the text and buttons */
+      gap: 10px; /* Adjust spacing between text and buttons */
+    }
+
+    .ticker span {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+  
+    .buttons {
+      display: flex;
+      flex-direction: column; /* Stack buttons vertically */
+      align-items: center;
+      gap: 2px; /* Reduce space between the increment and decrement buttons */
+    }
+
+  
+    .buttons button {
+      background-color: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #007bff;
+      padding: 2px 5px; /* Reduce padding to make the arrows closer together */
+    }
+
+    .buttons button:last-child {
+      margin-top: -2px; /* Moves the down arrow up */
+    }
+
+    .buttons button:first-child {
+      margin-top: 2px; /* Moves the down arrow up */
+    }
+
+
+  
+    .buttons button:hover {
+      color: #0056b3;
+    }
+  
+    .progress-bar-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      height: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none; /* Initially hidden */
+    }
+  
+    .progress-bar {
+      height: 100%;
+      width: 0%; /* Progress starts at 0% */
+      background-color: #007bff;
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+  
     .problem-box {
       background: #fff;
       padding: 5vw;
@@ -31,32 +107,36 @@
       align-items: center;
       justify-content: center;
     }
+  
     .problem-container {
       display: flex;
       flex-direction: column;
       align-items: flex-end; /* Align rows to the right */
     }
+  
     .number {
       font-size: 5vw;
       text-align: right;
     }
+  
     .operator-row {
-        display: flex;
-        justify-content: flex-end; /* Align operator and num2 to the right */
-        align-items: center; /* Vertically center operator with num2 */
-        width: 100%; /* Ensure proper alignment within container */
-        }
-
-        .operator {
-        font-size: 5vw;
-        margin-right: 0.5vw; /* Space between operator and num2 */
-        }
-
+      display: flex;
+      justify-content: flex-end; /* Align operator and num2 to the right */
+      align-items: center; /* Vertically center operator with num2 */
+      width: 100%; /* Ensure proper alignment within container */
+    }
+  
+    .operator {
+      font-size: 5vw;
+      margin-right: 0.5vw; /* Space between operator and num2 */
+    }
+  
     .line {
       border-top: 2px solid #333;
       margin-top: 15px;
       width: 100%;
     }
+  
     button {
       background-color: #007bff;
       color: white;
@@ -67,24 +147,43 @@
       cursor: pointer;
       margin-top: 2vh;
     }
+  
     button:hover {
       background-color: #0056b3;
     }
   </style>
+  
 </head>
 <body>
-  <div class="problem-box">
-    <div class="problem-container">
-        <div id="num1" class="number"></div>
-        <div class="operator-row">
-          <div id="operator" class="operator"></div>
-          <div id="num2" class="number"></div>
+      <div class="setup-container">
+        <label for="problemTicker" style="font-size: 2vw;"># of problems:</label>
+        <div class="ticker">
+          <span id="problemCount" style="font-size: 2vw;">5</span>
+          <div class="buttons">
+            <button id="increment" onclick="changeProblemCount(5)">&#9650;</button>
+            <button id="decrement" onclick="changeProblemCount(-5)">&#9660;</button>
+          </div>
         </div>
+        <div><button onclick="startProblems()">Start</button></div>
       </div>
       
-    <div class="line"></div>
-    <button onclick="generateProblem()">Next</button>
-  </div>
+      
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      
+      <div class="problem-box" style="display: none;">
+        <div class="problem-container">
+          <div id="num1" class="number"></div>
+          <div class="operator-row">
+            <div id="operator" class="operator"></div>
+            <div id="num2" class="number"></div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <button onclick="nextProblem()">Next</button>
+      </div>
+      
 
   <script>
     function generateProblem() {
@@ -122,6 +221,52 @@
       document.getElementById('operator').textContent = operator;
       document.getElementById('num2').textContent = num2;
     }
+    let totalProblems = 5; // Default to 5 problems
+
+function changeProblemCount(delta) {
+  const minProblems = 5;
+  const maxProblems = 50;
+
+  // Adjust problem count by delta, keeping it within bounds
+  totalProblems = Math.min(maxProblems, Math.max(minProblems, totalProblems + delta));
+
+  // Update the display
+  document.getElementById('problemCount').textContent = totalProblems;
+}
+
+function startProblems() {
+  currentProblem = 0;
+
+  // Show the progress bar and problem box, hide the setup
+  document.querySelector('.setup-container').style.display = 'none';
+  document.querySelector('.progress-bar-container').style.display = 'block';
+  document.querySelector('.problem-box').style.display = 'flex';
+
+  updateProgressBar();
+  generateProblem();
+}
+
+
+    function nextProblem() {
+    currentProblem++;
+
+    if (currentProblem < totalProblems) {
+        updateProgressBar();
+        generateProblem();
+    } else {
+        updateProgressBar();
+        setTimeout(() => {
+          alert("You've completed all problems!");
+          location.reload(); // Reload page to restart
+        }, 500); // Delay the alert for 500ms to allow the animation to complete
+    }
+    }
+
+    function updateProgressBar() {
+    const progress = (currentProblem / totalProblems) * 100;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
   </script>
 </body>
 </html>
