@@ -164,8 +164,9 @@
             <button id="decrement" onclick="changeProblemCount(-5)">&#9660;</button>
           </div>
         </div>
+        <div><button onclick="startProblems()">Start</button></div>
       </div>
-      <div><button onclick="startProblems()">Start</button></div>
+      
       
       <div class="progress-bar-container">
         <div id="progress-bar" class="progress-bar"></div>
@@ -253,8 +254,11 @@ function startProblems() {
         updateProgressBar();
         generateProblem();
     } else {
-        alert("You've completed all problems!");
-        location.reload(); // Reload page to restart
+        updateProgressBar();
+        setTimeout(() => {
+          alert("You've completed all problems!");
+          location.reload(); // Reload page to restart
+        }, 500); // Delay the alert for 500ms to allow the animation to complete
     }
     }
 
