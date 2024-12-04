@@ -18,18 +18,18 @@
     }
   
     .setup-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      padding: 15px; /* Add some padding inside the border */
-      border: 2px solid #007bff; /* Simple blue border */
-      border-radius: 10px; /* Rounded corners for a modern look */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-      background-color: #f9f9f9; /* Light background for contrast */
-      }
+  display: flex;
+  align-items: center; /* Vertically align all child elements */
+  justify-content: space-between; /* Distribute elements evenly */
+  gap: 20px; /* Add spacing between different sections */
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  padding: 15px;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #f9f9f9; /* Light background for contrast */
+}
 
 
     .ticker {
@@ -178,12 +178,56 @@
       50% { background-color: #fff; }
     }
 
+    .operation-selection {
+      display: flex;
+      gap: 10px; /* Space between operation buttons */
+      align-items: center; /* Vertically align buttons */
+      justify-content: center; /* Horizontally center buttons in their container */
+    }
+
+.operation-btn {
+  font-size: 2vw;
+  padding: 10px 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Light gray background for better visibility */
+  color: #333; /* Dark text for symbols */
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.operation-btn.selected {
+  background-color: #007bff; /* Blue background for selected state */
+  color: white; /* White text for contrast */
+  border-color: #007bff; /* Match border color to the selected state */
+}
+
+.operation-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  color: white; /* White text when hovering */
+}
+
+
+.operation-selection.invalid {
+  animation: flash 0.3s;
+}
+
+@keyframes flash {
+  0%, 100% { background-color: #f8d7da; }
+  50% { background-color: #fff; }
+}
     
   </style>
   
 </head>
 <body>
       <div class="setup-container">
+        <div id="operation-selection" class="operation-selection">
+          <button class="operation-btn" data-operation="+">+</button>
+          <button class="operation-btn" data-operation="-">−</button>
+          <button class="operation-btn" data-operation="×">×</button>
+          <button class="operation-btn" data-operation="÷">÷</button>
+        </div>       
         <label for="problemTicker" style="font-size: 2vw;"># of problems:</label>
         <div class="ticker">
           <span id="problemCount" style="font-size: 2vw;">5</span>
@@ -216,42 +260,61 @@
       
 
   <script>
-    function generateProblem() {
-      const operations = ['+', '-', '*', '/'];
-      let num1, num2, operator;
 
-      operator = operations[Math.floor(Math.random() * operations.length)];
+    let selectedOperations = []; // Store selected operations
 
-      if (operator === '*') {
-        // Multiplication with answer <= 144
-        num1 = Math.floor(Math.random() * 12) + 1; // 1 to 12
-        num2 = Math.floor(Math.random() * 12) + 1; // 1 to 12
-        operator = '×';
-      } else if (operator === '/') {
-        // Division with answer <= 12
-        num2 = Math.floor(Math.random() * 12) + 1; // 1 to 12
-        const quotient = Math.floor(Math.random() * 12) + 1; // 1 to 12
-        num1 = num2 * quotient; // Ensures integer result
-        operator = '÷';
-      } else if (operator === '-') {
-        // Subtraction with non-negative result
-        num1 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-        num2 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-        if (num2 > num1) {
-          [num1, num2] = [num2, num1]; // Swap to ensure num1 >= num2
+    // Add event listeners to operation buttons for toggle functionality
+    document.querySelectorAll('.operation-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        const operation = button.getAttribute('data-operation');
+        if (button.classList.contains('selected')) {
+          // Remove selected state
+          button.classList.remove('selected');
+          selectedOperations = selectedOperations.filter((op) => op !== operation);
+        } else {
+          // Add selected state
+          button.classList.add('selected');
+          selectedOperations.push(operation);
         }
-      } else {
-        // Addition
-        num1 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-        num2 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-      }
+      });
+    });
 
-      // Update the HTML
-      document.getElementById('num1').textContent = num1;
-      document.getElementById('operator').textContent = operator;
-      document.getElementById('num2').textContent = num2;
-    }
-    let totalProblems = 5; // Default to 5 problems
+
+
+    function generateProblem() {
+  const operations = selectedOperations; // Use only selected operations
+  let num1, num2, operator;
+
+  operator = operations[Math.floor(Math.random() * operations.length)]; // Randomly pick a selected operation
+
+  if (operator === '×') {
+    // Multiplication with answer <= 144
+    num1 = Math.floor(Math.random() * 12) + 1;
+    num2 = Math.floor(Math.random() * 12) + 1;
+  } else if (operator === '÷') {
+    // Division with answer <= 12
+    num2 = Math.floor(Math.random() * 12) + 1;
+    const quotient = Math.floor(Math.random() * 12) + 1;
+    num1 = num2 * quotient;
+  } else if (operator === '-') {
+    // Subtraction with non-negative result
+    num1 = Math.floor(Math.random() * 100) + 1;
+    num2 = Math.floor(Math.random() * 100) + 1;
+    if (num2 > num1) [num1, num2] = [num2, num1]; // Swap to ensure num1 >= num2
+  } else if (operator === '+') {
+    // Addition
+    num1 = Math.floor(Math.random() * 100) + 1;
+    num2 = Math.floor(Math.random() * 100) + 1;
+  }
+
+  // Update the HTML
+  document.getElementById('num1').textContent = num1;
+  document.getElementById('operator').textContent = operator;
+  document.getElementById('num2').textContent = num2;
+}
+
+
+let totalProblems = 5; // Default to 5 problems
 
 function changeProblemCount(delta) {
   const minProblems = 5;
@@ -265,6 +328,14 @@ function changeProblemCount(delta) {
 }
 
 function startProblems() {
+  // Validate that at least one operation is selected
+  if (selectedOperations.length === 0) {
+    const operationDiv = document.getElementById('operation-selection');
+    operationDiv.classList.add('invalid'); // Flash the operation div red
+    setTimeout(() => operationDiv.classList.remove('invalid'), 300);
+    return; // Do not proceed if no operations are selected
+  }
+
   currentProblem = 0;
 
   // Show the progress bar and problem box, hide the setup
