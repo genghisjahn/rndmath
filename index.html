@@ -328,23 +328,29 @@
 </head>
 <body>
       <div class="setup-container">
+        <table border="0">
+          <tr><td style="font-size: 2vw;">Choose Operations</td><td>
         <div id="operation-selection" class="operation-selection">
           <button class="operation-btn" data-operation="+">+</button>
           <button class="operation-btn" data-operation="-">−</button>
           <button class="operation-btn" data-operation="×">×</button>
           <button class="operation-btn" data-operation="÷">÷</button>
-        </div>       
-        <label for="problemTicker" style="font-size: 2vw;"># of problems:</label>
+        </div> </td>
+      </tr>
+      <tr>
+        <td><label for="problemTicker" style="font-size: 2vw;">Choose # of problems:</label></td><td>
         <div class="ticker">
           <span id="problemCount" style="font-size: 2vw;">5</span>
           <div class="buttons">
             <button id="increment" onclick="changeProblemCount(5)">&#9650;</button>
             <button id="decrement" onclick="changeProblemCount(-5)">&#9660;</button>
-          </div>
+          </div></td></tr>
+          <tr><td>&nbsp;</td><td>
         </div>
-        <div><button onclick="startProblems()">Start</button></div>
+        <div><button onclick="startProblems()">Online Drill</button></div>
         <div><button onclick="downloadWorksheetPDF()">Download Sheet</button></div>
-
+      </td></tr>
+    </table>
       </div>
       
       
@@ -397,13 +403,6 @@
     </div>
   </div>
 </div>
-
-
-  
-  
-      
-      
-      
 
   <script>
 
@@ -802,7 +801,6 @@ function downloadWorksheetPDF() {
   // Generate worksheet content
   let worksheetHTML = `
     <h1 style="text-align: center;">Math Worksheet</h1>
-    <p style="text-align: center;">Solve the problems below and write your answers in the spaces provided.</p>
     <table style="width: 100%; border-spacing: 20px; text-align: center;">
   `;
 
