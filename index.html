@@ -416,6 +416,24 @@
 
     let randomSeeded = null; // Global seeded random function
 
+    // Function to get query string parameters
+function getQueryStringParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+// Attach both event listeners to the window's load event
+window.addEventListener('load', checkAnswerSeed);
+window.addEventListener('load', initSpeechRecognition);
+
+// Check for 'answerSeed' on page load
+// Check for 'answerSeed' on page load
+function checkAnswerSeed() {
+  const answerSeed = getQueryStringParam('answerSeed');
+  if (answerSeed) {
+    alert(`Answer Seed: ${answerSeed}`);
+  }
+}
 function generateRandomSeed() {
   const seedLength = 16; // Adjust the length of the seed as needed
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -803,8 +821,7 @@ function stopSpeechRecognition() {
   }
 }
 
-// Initialize recognition on page load
-window.onload = initSpeechRecognition;
+
 
 function generateAllProblems() {
   initializeSeededRandom(); // Initialize the seeded random generator
