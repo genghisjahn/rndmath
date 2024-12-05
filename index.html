@@ -425,15 +425,52 @@ function getQueryStringParam(param) {
 // Attach both event listeners to the window's load event
 window.addEventListener('load', checkAnswerSeed);
 window.addEventListener('load', initSpeechRecognition);
+// Call on page load
+window.addEventListener('load', checkAnswerSeedAndGenerateWorksheet);
+
+function initializeSeededRandomOrQuerySeed() {
+  const answerSeed = getQueryStringParam('answerSeed');
+  if (answerSeed) {
+    // Use the seed from the query string
+    randomSeeded = createSeededRandom(answerSeed);
+    currentSeed = answerSeed; // Store the current seed globally
+    console.log(`Using seed from query string: ${answerSeed}`);
+  } else {
+    // Fall back to generate a new seed
+    initializeSeededRandom();
+    console.log(`Generated new seed: ${currentSeed}`);
+  }
+}
+
+function checkAnswerSeedAndGenerateWorksheet() {
+  initializeSeededRandomOrQuerySeed(); // Initialize the random seed
+  generateAllProblems(); // Generate problems based on the seed
+
+  // Show a download button for user interaction
+  const downloadContainer = document.getElementById('download-link-container');
+  downloadContainer.style.display = 'block';
+
+  // Optionally, show a preview of the worksheet in a modal or inline
+  console.log('Worksheet generated! Click the button to download.');
+}
+
 
 // Check for 'answerSeed' on page load
-// Check for 'answerSeed' on page load
+// Automatically generate the worksheet if `answerSeed` is in the URL
 function checkAnswerSeed() {
   const answerSeed = getQueryStringParam('answerSeed');
   if (answerSeed) {
-    alert(`Answer Seed: ${answerSeed}`);
+    // Initialize the seeded random function
+    randomSeeded = createSeededRandom(answerSeed);
+    currentSeed = answerSeed; // Store the current seed globally
+
+    // Automatically generate and display the worksheet
+    generateAllProblems(); // Generate problems based on the seed
+    downloadWorksheetPDF(); // Generate the worksheet and display it
   }
 }
+
+
 function generateRandomSeed() {
   const seedLength = 16; // Adjust the length of the seed as needed
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -853,15 +890,9 @@ function generateAllProblems() {
 }
 
 function downloadWorksheetPDF() {
-  // Ensure problems are generated
-  if (allProblems.length === 0) {
-    generateAllProblems();
-  }
-
   // Generate the QR code URL
   const qrCodeData = `https://1235media.com?answerSeed=${currentSeed}`;
 
-  // Generate the QR code using the qrcode library
   QRCode.toDataURL(qrCodeData, { width: 100 }, function (err, qrCodeURL) {
     if (err) {
       console.error("Error generating QR code:", err);
@@ -878,7 +909,7 @@ function downloadWorksheetPDF() {
     `;
 
     allProblems.forEach((problem, index) => {
-      if (index % 5 === 0) worksheetHTML += "<tr>"; // Start a new row every 5 problems
+      if (index % 5 === 0) worksheetHTML += "<tr>";
 
       worksheetHTML += `
         <td style="vertical-align: top; text-align: center; width: 20%;">
@@ -890,17 +921,15 @@ function downloadWorksheetPDF() {
         </td>
       `;
 
-      if (index % 5 === 4) worksheetHTML += "</tr>"; // Close the row after 5 problems
+      if (index % 5 === 4) worksheetHTML += "</tr>";
     });
 
-    // Close the table
     worksheetHTML += "</table>";
 
-    // Create a new window for printing
+    // Open the content in a new window (only allowed during user interaction)
     const printWindow = window.open("", "_blank");
     printWindow.document.open();
 
-    // Generate the full HTML content
     const htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -927,17 +956,6 @@ function downloadWorksheetPDF() {
             text-align: center;
             width: 20%;
           }
-          .problem {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-          .line {
-            border-top: 2px solid black;
-            margin-top: 10px;
-            width: 50px; /* Adjusted to align with the numbers */
-            height: 20px;
-          }
         </style>
       </head>
       <body>
@@ -946,16 +964,11 @@ function downloadWorksheetPDF() {
       </html>
     `;
 
-    // Write the content to the new window
     printWindow.document.write(htmlContent);
     printWindow.document.close();
-
-    // Wait for the new window to load, then trigger the print dialog
-    printWindow.onload = () => {
-      printWindow.print();
-    };
   });
 }
+
 
 
 
