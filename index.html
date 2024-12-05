@@ -446,10 +446,13 @@ function createSeededRandom(seed) {
   };
 }
 
+let currentSeed; // Global variable to store the seed
+
 function initializeSeededRandom() {
-  const seed = generateRandomSeed(); // Generate a new seed
-  randomSeeded = createSeededRandom(seed); // Initialize the seeded random function
+  currentSeed = generateRandomSeed(); // Store the generated seed
+  randomSeeded = createSeededRandom(currentSeed); // Initialize the seeded random function
 }
+
 
 
 
@@ -838,94 +841,111 @@ function downloadWorksheetPDF() {
     generateAllProblems();
   }
 
-  // Generate worksheet content
-  let worksheetHTML = `
-    <h1 style="text-align: center;">Math Worksheet</h1>
-    <table style="width: 100%; border-spacing: 20px; text-align: center;">
-  `;
+  // Generate the QR code URL
+  const qrCodeData = `https://1235media.com?answerSeed=${currentSeed}`;
 
-  allProblems.forEach((problem, index) => {
-    if (index % 5 === 0) worksheetHTML += "<tr>"; // Start a new row every 5 problems
+  // Generate the QR code using the qrcode library
+  QRCode.toDataURL(qrCodeData, { width: 100 }, function (err, qrCodeURL) {
+    if (err) {
+      console.error("Error generating QR code:", err);
+      return;
+    }
 
-    worksheetHTML += `
-      <td style="vertical-align: top; text-align: center; width: 20%;">
-        <div style="font-size: 24px; font-family: Arial, sans-serif; text-align: right; display: inline-block;">
-          <div style="display: block;">${problem.num1}</div>
-          <div style="display: block;">${problem.operator} ${problem.num2}</div>
-          <div style="border-top: 2px solid black; margin-top: 2px; display: inline-block; width: 50px; height: 20px;"></div>
-        </div>
-      </td>
+    // Generate worksheet content
+    let worksheetHTML = `
+      <h1 style="text-align: center;">Math Worksheet</h1>
+      <div style="text-align: center;">
+        <img src="${qrCodeURL}" alt="QR Code" style="margin-bottom: 20px;" />
+      </div>
+      <table style="width: 100%; border-spacing: 20px; text-align: center;">
     `;
 
-    if (index % 5 === 4) worksheetHTML += "</tr>"; // Close the row after 5 problems
+    allProblems.forEach((problem, index) => {
+      if (index % 5 === 0) worksheetHTML += "<tr>"; // Start a new row every 5 problems
+
+      worksheetHTML += `
+        <td style="vertical-align: top; text-align: center; width: 20%;">
+          <div style="font-size: 24px; font-family: Arial, sans-serif; text-align: right; display: inline-block;">
+            <div style="display: block;">${problem.num1}</div>
+            <div style="display: block;">${problem.operator} ${problem.num2}</div>
+            <div style="border-top: 2px solid black; margin-top: 2px; display: inline-block; width: 50px; height: 20px;"></div>
+          </div>
+        </td>
+      `;
+
+      if (index % 5 === 4) worksheetHTML += "</tr>"; // Close the row after 5 problems
+    });
+
+    // Close the table
+    worksheetHTML += "</table>";
+
+    // Create a new window for printing
+    const printWindow = window.open("", "_blank");
+    printWindow.document.open();
+
+    // Generate the full HTML content
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Math Worksheet</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+          }
+          h1, p {
+            text-align: center;
+          }
+          table {
+            width: 100%;
+            border-spacing: 20px;
+            text-align: center;
+          }
+          td {
+            font-size: 24px;
+            vertical-align: top;
+            text-align: center;
+            width: 20%;
+          }
+          .problem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .line {
+            border-top: 2px solid black;
+            margin-top: 10px;
+            width: 50px; /* Adjusted to align with the numbers */
+            height: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        ${worksheetHTML}
+      </body>
+      </html>
+    `;
+
+    // Write the content to the new window
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+
+    // Wait for the new window to load, then trigger the print dialog
+    printWindow.onload = () => {
+      printWindow.print();
+    };
   });
-
-  // Close the table
-  worksheetHTML += "</table>";
-
-  // Create a new window for printing
-  const printWindow = window.open("", "_blank");
-  printWindow.document.open();
-
-  // Generate the full HTML content
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Math Worksheet</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-        }
-        h1, p {
-          text-align: center;
-        }
-        table {
-          width: 100%;
-          border-spacing: 20px;
-          text-align: center;
-        }
-        td {
-          font-size: 24px;
-          vertical-align: top;
-          text-align: center;
-          width: 20%;
-        }
-        .problem {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .line {
-          border-top: 2px solid black;
-          margin-top: 10px;
-          width: 50px; /* Adjusted to align with the numbers */
-          height: 20px;
-        }
-      </style>
-    </head>
-    <body>
-      ${worksheetHTML}
-    </body>
-    </html>
-  `;
-
-  // Write the content to the new window
-  printWindow.document.write(htmlContent);
-  printWindow.document.close();
-
-  // Wait for the new window to load, then trigger the print dialog
-  printWindow.onload = () => {
-    printWindow.print();
-  };
 }
 
 
 
 
+
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+
 </body>
 </html>
