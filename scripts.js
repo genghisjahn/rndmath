@@ -46,16 +46,21 @@ randomSeeded = createSeededRandom(currentSeed); // Initialize the seeded random 
 }
 
 
+
 function redirectToWorksheet() {
     initializeSeededRandom();
-    if (typeof currentSeed === 'undefined' || !currentSeed) {
+    if (!currentSeed) {
       alert("The current seed is not defined. Please generate problems first.");
       return;
     }
   
-    // Redirect to worksheet.html with the current seed as a query parameter
-    window.location.href = `worksheet.html?answerSeed=${encodeURIComponent(currentSeed)}`;
+    // Get the number of problems (totalProblems)
+    const num = totalProblems || 5; // Default to 5 if not set
+  
+    // Redirect with both the seed and number of problems
+    window.location.href = `worksheet.html?answerSeed=${encodeURIComponent(currentSeed)}&num=${encodeURIComponent(num)}`;
   }
+  
   
 
 function generateWorksheet(seed) {

@@ -3,24 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Worksheet</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Math Worksheet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      border-spacing: 20px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    td {
+      font-size: 24px;
+      font-weight: bold;
+      vertical-align: bottom;
+      padding: 10px;
+    }
+
+    .line {
+      border-top: 2px solid black;
+      margin-top: 10px;
+      height: 2px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Math Worksheet</h1>
   <div id="worksheet-container">
-    <!-- Worksheet content will be dynamically inserted here -->
+    <!-- Problems will be dynamically inserted here -->
   </div>
   <script src="scripts.js"></script>
   <script>
-    // Parse the answerSeed query parameter
     const params = new URLSearchParams(window.location.search);
     const answerSeed = params.get('answerSeed');
 
+    const numProblems = parseInt(params.get('num'), 10) || 5; // Default to 5 if not provided
+
+
     if (answerSeed) {
-      // Call your existing logic to generate the worksheet using the seed
-      generateWorksheet(answerSeed);
+      initializeSeededRandom(answerSeed);
+      totalProblems = numProblems;
+      generateAllProblems();
+      displayWorksheet();
     } else {
-      document.getElementById('worksheet-container').textContent = "Error: Missing or invalid seed.";
+      document.getElementById('worksheet-container').innerHTML = '<p>Error: No seed provided.</p>';
+    }
+
+    function displayWorksheet() {
+      
+      const container = document.getElementById('worksheet-container');
+      let worksheetHTML = '<table>';
+
+      allProblems.forEach((problem, index) => {
+        if (index % 5 === 0) worksheetHTML += '<tr>'; // Start a new row every 5 problems
+
+        worksheetHTML += `
+          <td>
+            <div>${problem.num1}</div>
+            <div>${problem.operator} ${problem.num2}</div>
+            <div class="line"></div>
+          </td>
+        `;
+
+        if (index % 5 === 4) worksheetHTML += '</tr>'; // End the row after 5 problems
+      });
+
+      worksheetHTML += '</table>';
+      container.innerHTML = worksheetHTML;
     }
   </script>
 </body>
