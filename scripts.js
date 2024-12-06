@@ -46,6 +46,24 @@ randomSeeded = createSeededRandom(currentSeed); // Initialize the seeded random 
 }
 
 
+function redirectToWorksheet() {
+    initializeSeededRandom();
+    if (typeof currentSeed === 'undefined' || !currentSeed) {
+      alert("The current seed is not defined. Please generate problems first.");
+      return;
+    }
+  
+    // Redirect to worksheet.html with the current seed as a query parameter
+    window.location.href = `worksheet.html?answerSeed=${encodeURIComponent(currentSeed)}`;
+  }
+  
+
+function generateWorksheet(seed) {
+  console.log(`Generating worksheet with seed: ${seed}`);
+  // Your logic to generate problems based on the seed
+  // Example: Use the seed to set up random problem generation
+}
+
 
 
 // Add event listeners to operation buttons for toggle functionality
