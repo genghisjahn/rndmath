@@ -1,0 +1,319 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+  
+    .setup-container {
+  display: flex;
+  align-items: center; /* Vertically align all child elements */
+  justify-content: space-between; /* Distribute elements evenly */
+  gap: 20px; /* Add spacing between different sections */
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  padding: 15px;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #f9f9f9; /* Light background for contrast */
+}
+
+
+    .ticker {
+      display: flex;
+      align-items: center; /* Vertically align the text and buttons */
+      gap: 10px; /* Adjust spacing between text and buttons */
+    }
+
+    .ticker span {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+  
+    .buttons {
+      display: flex;
+      flex-direction: column; /* Stack buttons vertically */
+      align-items: center;
+      gap: 2px; /* Reduce space between the increment and decrement buttons */
+    }
+
+  
+    .buttons button {
+      background-color: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #007bff;
+      padding: 2px 5px; /* Reduce padding to make the arrows closer together */
+    }
+
+    .buttons button:last-child {
+      margin-top: -2px; /* Moves the down arrow up */
+    }
+
+    .buttons button:first-child {
+      margin-top: 2px; /* Moves the down arrow up */
+    }
+
+
+  
+    .buttons button:hover {
+      color: #0056b3;
+    }
+  
+    .progress-bar-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      height: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none; /* Initially hidden */
+    }
+  
+    .progress-bar {
+      height: 100%;
+      width: 0%; /* Progress starts at 0% */
+      background-color: #007bff;
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+  
+    .problem-box {
+      background: #fff;
+      padding: 5vw;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 80vw;
+      max-height: 80vh;
+      width: 50vw;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .problem-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Align rows to the right */
+    }
+  
+    .number {
+      font-size: 5vw;
+      text-align: right;
+    }
+  
+    .operator-row {
+      display: flex;
+      justify-content: flex-end; /* Align operator and num2 to the right */
+      align-items: center; /* Vertically center operator with num2 */
+      width: 100%; /* Ensure proper alignment within container */
+    }
+  
+    .operator {
+      font-size: 5vw;
+      margin-right: 0.5vw; /* Space between operator and num2 */
+    }
+  
+    .line {
+      border-top: 2px solid #333;
+      margin-top: 15px;
+      width: 100%;
+    }
+  
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 1vw 2vw;
+      border-radius: 5px;
+      font-size: 2vw;
+      cursor: pointer;
+      margin-top: 2vh;
+    }
+  
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .answer-input {
+      font-size: 5vw;
+      text-align: center;
+      width: 80%; /* Matches the size of the problem box */
+      margin-top: 20px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .answer-input:focus {
+      border-color: #007bff;
+    }
+
+    .answer-input.invalid {
+      border-color: red;
+      animation: flash 0.3s;
+    }
+
+    @keyframes flash {
+      0%, 100% { background-color: #f8d7da; }
+      50% { background-color: #fff; }
+    }
+
+    .operation-selection {
+      display: flex;
+      gap: 10px; /* Space between operation buttons */
+      align-items: center; /* Vertically align buttons */
+      justify-content: center; /* Horizontally center buttons in their container */
+    }
+
+.operation-btn {
+  font-size: 2vw;
+  padding: 10px 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Light gray background for better visibility */
+  color: #333; /* Dark text for symbols */
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.operation-btn.selected {
+  background-color: #007bff; /* Blue background for selected state */
+  color: white; /* White text for contrast */
+  border-color: #007bff; /* Match border color to the selected state */
+}
+
+.operation-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  color: white; /* White text when hovering */
+}
+
+
+.operation-selection.invalid {
+  animation: flash 0.3s;
+}
+
+@keyframes flash {
+  0%, 100% { background-color: #f8d7da; }
+  50% { background-color: #fff; }
+}
+    
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#results-container-fix {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0; /* Remove any spacing between elements */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 80%;
+}
+
+.restart-container {
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  width: 100%; /* Ensure it aligns with the modal content */
+  text-align: center; /* Center the button */
+}
+
+.restart-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.restart-button:hover {
+  background-color: #0056b3;
+}
+
+
+.modal-content button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 15px;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.answer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the input and microphone */
+}
+
+.mic-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.mic-btn:hover {
+  background-color: #0056b3;
+}
+
+.mic-btn:active {
+  background-color: #003f8f;
+}
+
+.mic-btn.listening {
+  background-color: #ff4d4d; /* Red background for listening state */
+  color: white;
+}
+
+
+
