@@ -452,6 +452,9 @@ allProblems.push({ num1, num2, operator });
 
 function downloadWorksheetPDF() {
 // Ensure problems are generated
+
+totalProblems = document.getElementById('problemCount').textContent;
+
 if (allProblems.length === 0) {
 generateAllProblems();
 }
