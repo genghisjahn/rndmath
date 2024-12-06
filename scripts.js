@@ -455,6 +455,7 @@ function downloadWorksheetPDF() {
 
 totalProblems = document.getElementById('problemCount').textContent;
 
+
 if (allProblems.length === 0) {
 generateAllProblems();
 }
