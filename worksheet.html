@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worksheet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="worksheet-container">
+    <!-- Worksheet content will be dynamically inserted here -->
+  </div>
+  <script src="scripts.js"></script>
+  <script>
+    // Parse the answerSeed query parameter
+    const params = new URLSearchParams(window.location.search);
+    const answerSeed = params.get('answerSeed');
+
+    if (answerSeed) {
+      // Call your existing logic to generate the worksheet using the seed
+      generateWorksheet(answerSeed);
+    } else {
+      document.getElementById('worksheet-container').textContent = "Error: Missing or invalid seed.";
+    }
+  </script>
+</body>
+</html>
