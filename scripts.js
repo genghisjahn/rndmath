@@ -50,16 +50,20 @@ randomSeeded = createSeededRandom(currentSeed); // Initialize the seeded random 
 function redirectToWorksheet() {
     initializeSeededRandom();
     if (!currentSeed) {
-      alert("The current seed is not defined. Please generate problems first.");
-      return;
+        alert("The current seed is not defined. Please generate problems first.");
+        return;
     }
-  
+
     // Get the number of problems (totalProblems)
     const num = totalProblems || 5; // Default to 5 if not set
-  
-    // Redirect with both the seed and number of problems
-    window.location.href = `worksheet.html?answerSeed=${encodeURIComponent(currentSeed)}&num=${encodeURIComponent(num)}`;
-  }
+
+    // Get the selected operations as a comma-separated string
+    const ops = selectedOperations.join(',');
+
+    // Redirect with the seed, number of problems, and selected operations
+    window.location.href = `worksheet.html?answerSeed=${encodeURIComponent(currentSeed)}&num=${encodeURIComponent(num)}&ops=${encodeURIComponent(ops)}`;
+}
+
   
   
 
@@ -449,6 +453,8 @@ if (operator === "×") {
 allProblems.push({ num1, num2, operator });
 }
 }
+
+
 
 function downloadWorksheetPDF() {
 // Ensure problems are generated

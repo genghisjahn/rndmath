@@ -3,91 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Worksheet</title>
+  <title>Worksheet</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f9;
+      margin: 20px;
     }
-
     h1 {
       text-align: center;
-      margin-bottom: 20px;
     }
-
-    table {
-      border-spacing: 20px;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: center;
+    p {
+      font-size: 18px;
     }
-
-    td {
-      font-size: 24px;
+    .query-value {
       font-weight: bold;
-      vertical-align: bottom;
-      padding: 10px;
-    }
-
-    .line {
-      border-top: 2px solid black;
-      margin-top: 10px;
-      height: 2px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <h1>Math Worksheet</h1>
-  <div id="worksheet-container">
-    <!-- Problems will be dynamically inserted here -->
-  </div>
-  <script src="scripts.js"></script>
+  <p><strong>Answer Seed:</strong> <span id="answerSeed" class="query-value"></span></p>
+  <p><strong>Number of Problems:</strong> <span id="numProblems" class="query-value"></span></p>
+  <p><strong>Operations:</strong> <span id="operations" class="query-value"></span></p>
+
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const answerSeed = params.get('answerSeed');
-
-    const numProblems = parseInt(params.get('num'), 10) || 5; // Default to 5 if not provided
-
-
-    if (answerSeed) {
-      initializeSeededRandom(answerSeed);
-      totalProblems = numProblems;
-      generateAllProblems();
-      displayWorksheet();
-    } else {
-      document.getElementById('worksheet-container').innerHTML = '<p>Error: No seed provided.</p>';
+    // Function to read query parameters
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        answerSeed: params.get('answerSeed'),
+        num: params.get('num'),
+        ops: params.get('ops'),
+      };
     }
 
-    function displayWorksheet() {
-      
-      const container = document.getElementById('worksheet-container');
-      let worksheetHTML = '<table>';
-
-      allProblems.forEach((problem, index) => {
-        if (index % 5 === 0) worksheetHTML += '<tr>'; // Start a new row every 5 problems
-
-        worksheetHTML += `
-          <td>
-            <div>${problem.num1}</div>
-            <div>${problem.operator} ${problem.num2}</div>
-            <div class="line"></div>
-          </td>
-        `;
-
-        if (index % 5 === 4) worksheetHTML += '</tr>'; // End the row after 5 problems
-      });
-
-      worksheetHTML += '</table>';
-      container.innerHTML = worksheetHTML;
-    }
+    // Load query parameters and display them
+    const queryParams = getQueryParams();
+    document.getElementById('answerSeed').textContent = queryParams.answerSeed || "Not provided";
+    document.getElementById('numProblems').textContent = queryParams.num || "Not provided";
+    document.getElementById('operations').textContent = queryParams.ops ? queryParams.ops.split(',').join(', ') : "Not provided";
   </script>
 </body>
 </html>
