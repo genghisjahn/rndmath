@@ -1,48 +1,64 @@
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Worksheet</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    p {
-      font-size: 18px;
-    }
-    .query-value {
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
-</head>
-<body>
-  <h1>Math Worksheet</h1>
-  <p><strong>Answer Seed:</strong> <span id="answerSeed" class="query-value"></span></p>
-  <p><strong>Number of Problems:</strong> <span id="numProblems" class="query-value"></span></p>
-  <p><strong>Operations:</strong> <span id="operations" class="query-value"></span></p>
-
-  <script>
-    // Function to read query parameters
-    function getQueryParams() {
-      const params = new URLSearchParams(window.location.search);
-      return {
-        answerSeed: params.get('answerSeed'),
-        num: params.get('num'),
-        ops: params.get('ops'),
-      };
-    }
-
-    // Load query parameters and display them
-    const queryParams = getQueryParams();
-    document.getElementById('answerSeed').textContent = queryParams.answerSeed || "Not provided";
-    document.getElementById('numProblems').textContent = queryParams.num || "Not provided";
-    document.getElementById('operations').textContent = queryParams.ops ? queryParams.ops.split(',').join(', ') : "Not provided";
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Worksheet</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1, p {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-spacing: 20px;
+        text-align: center;
+      }
+      td {
+        font-size: 24px;
+        vertical-align: top;
+        text-align: center;
+        width: 20%;
+      }
+      .problem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .line {
+        border-top: 2px solid black;
+        margin-top: 10px;
+        width: 50px; /* Adjusted to align with the numbers */
+        height: 20px;
+      }
+    </style>
+     <script>
+      // Parse query parameters
+      function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          seed: params.get('answerSeed') || "", // Seed as a string
+          numProblems: parseInt(params.get('num')) || 10,
+          operations: params.get('ops') ? params.get('ops').split(',') : ['+'],
+        };
+      }
   </script>
-</body>
-</html>
+  </head>
+  <body>
+    <h1>Math Worksheet</h1>
+    <p><strong>Seed:</strong> <span id="seed"></span></p>
+    <p><strong>Number of Problems:</strong> <span id="numProblems"></span></p>
+    <p><strong>Operations:</strong> <span id="operations"></span></p>
+  
+    <script>
+      const queryParams = getQueryParams();
+      document.getElementById('seed').textContent = queryParams.seed;
+      document.getElementById('numProblems').textContent = queryParams.numProblems;
+      document.getElementById('operations').textContent = queryParams.operations.join(', ');
+    </script>
+  </body>
+  </html>
